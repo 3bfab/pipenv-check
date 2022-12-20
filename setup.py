@@ -15,12 +15,12 @@ setup(
     licence="MIT",
     url="https://github.com/3bfab/pipenv-check",
     classifiers=[],
-    package_dir={"": "pipenv-check"},
-    packages=find_packages(
-        where='pipenv-check',
-    ),
+    packages=find_packages(),
     package_data={},
     include_package_data=True,
+    entry_points={'console_scripts': [
+        'pipenv-check = check',
+    ]},
     python_requires=">=3.6",
     install_requires=[
         "pip>=9",
