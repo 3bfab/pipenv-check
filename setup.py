@@ -7,12 +7,12 @@ long_description = u"\n\n".join((open("README.md").read(),))
 
 setup(
     name="pipenv-check",
-    version="0.0.1",
+    version="0.0.2",
     description="View installed pip packages and their update status.",
     long_description=long_description,
     author="3bfab",
     author_email="info@3bfab.com",
-    licence="MIT",
+    license="MIT",
     url="https://github.com/3bfab/pipenv-check",
     classifiers=[],
     packages=find_packages(),
