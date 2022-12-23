@@ -19,7 +19,7 @@ setup(
     package_data={},
     include_package_data=True,
     entry_points={'console_scripts': [
-        'pipenv-check = check',
+        'pipenv-check = pipenv_check.check:main',
     ]},
     python_requires=">=3.6",
     install_requires=[
