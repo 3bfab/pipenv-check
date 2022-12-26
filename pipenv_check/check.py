@@ -43,6 +43,7 @@ def main():
                         elif not pipfile_lines[j].startswith("#"):
                             pipfile_packages.append(pipfile_lines[j].split("=")[0])
 
+    pipfile_packages = [x.strip(' ') for x in pipfile_packages]
     # get package names max len
     package_name_len = (
             max([len(package) for package in pipfile_packages]) + 1
