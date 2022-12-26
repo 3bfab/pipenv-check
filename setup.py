@@ -7,7 +7,7 @@ long_description = u"\n\n".join((open("README.md").read(),))
 
 setup(
     name="pipenv-check",
-    version="0.0.3",
+    version="0.0.4",
     description="View installed pip packages and their update status.",
     long_description=long_description,
     author="3bfab",
@@ -22,8 +22,5 @@ setup(
         'pipenv-check = pipenv_check.check:main',
     ]},
     python_requires=">=3.6",
-    install_requires=[
-        "pip>=9",
-        "toml==0.10.2",
-    ],
+    install_requires=[],
 )

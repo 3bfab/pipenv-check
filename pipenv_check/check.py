@@ -4,9 +4,8 @@ import json
 import subprocess
 from multiprocessing.pool import ThreadPool
 from urllib.request import urlopen
-
-import toml
 import ssl
+import os
 
 
 def main():
@@ -30,10 +29,20 @@ def main():
         'Checking for outdated packages in your "Pipfile"...', BColors.OKBLUE, True
     )
 
-    pipfile_packages = toml.load("Pipfile")["packages"]
+    pipfile_packages = []
+    if 'Pipfile' in os.listdir(os.getcwd()):
+        with open(os.getcwd() + '/Pipfile', "r+") as pipfile:
+            pipfile = list(map(lambda x: x.strip(), pipfile.readlines()))
+            index = 0
+            for idx, pipfile in enumerate(pipfile):
+                if pipfile == '[packages]':
+                    index = idx
+                    continue
+                if index > 0 and not pipfile.startswith('#') and not pipfile.startswith('[') and len(pipfile) > 0:
+                    pipfile_packages.append(pipfile.split()[0])
     # get package names max len
     package_name_len = (
-        max([len(package) for package in pipfile_packages.keys()]) + 1
+            max([len(package) for package in pipfile_packages]) + 1
     )
 
     # get the list of installed packages
