@@ -29,17 +29,20 @@ def main():
         'Checking for outdated packages in your "Pipfile"...', BColors.OKBLUE, True
     )
 
+    pipfile = os.path.join(os.getcwd(), "Pipfile")
     pipfile_packages = []
-    if 'Pipfile' in os.listdir(os.getcwd()):
-        with open(os.getcwd() + '/Pipfile', "r+") as pipfile:
-            pipfile = list(map(lambda x: x.strip(), pipfile.readlines()))
-            index = 0
-            for idx, pipfile in enumerate(pipfile):
-                if pipfile == '[packages]':
-                    index = idx
-                    continue
-                if index > 0 and not pipfile.startswith('#') and not pipfile.startswith('[') and len(pipfile) > 0:
-                    pipfile_packages.append(pipfile.split()[0])
+
+    if os.path.exists(pipfile):
+        with open(pipfile, "r+") as pipfile:
+            pipfile_lines = pipfile.read().splitlines()
+            for i in range(len(pipfile_lines)):
+                if pipfile_lines[i] == "[packages]":
+                    for j in range(i + 1, len(pipfile_lines)):
+                        if pipfile_lines[j] == "" or pipfile_lines[j][0] == "[":
+                            break
+                        elif not pipfile_lines[j].startswith("#"):
+                            pipfile_packages.append(pipfile_lines[j].split("=")[0])
+
     # get package names max len
     package_name_len = (
             max([len(package) for package in pipfile_packages]) + 1
