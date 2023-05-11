@@ -8,22 +8,24 @@ import ssl
 import os
 
 
+def color_print(message, text_type, bold=False):
+    if bold:
+        print(text_type + "\033[1m" + message + "\033[0m")  # noqa T201
+    else:
+        print(text_type + message + "\033[0m")  # noqa T201
+
+
+class BColors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    # - ENDC = "\033[0m"
+
+
 def main():
     ssl._create_default_https_context = ssl._create_unverified_context
-
-    def color_print(message, text_type, bold=False):
-        if bold:
-            print(text_type + "\033[1m" + message + "\033[0m")  # noqa T201
-        else:
-            print(text_type + message + "\033[0m")  # noqa T201
-
-    class BColors:
-        HEADER = "\033[95m"
-        OKBLUE = "\033[94m"
-        OKGREEN = "\033[92m"
-        WARNING = "\033[93m"
-        FAIL = "\033[91m"
-        # - ENDC = "\033[0m"
 
     color_print(
         'Checking for outdated packages in your "Pipfile"...', BColors.OKBLUE, True
@@ -50,7 +52,12 @@ def main():
     )
 
     # get the list of installed packages
-    installed_packages = json.loads(subprocess.check_output(["pip", "list", "--format=json"]).lower())
+    try:
+        installed_packages = json.loads(subprocess.check_output(["pip", "list", "--format=json"]).decode('utf-8').lower())
+    except Exception as e:
+        print("Error occurred while fetching installed packages:", e)
+        exit(1)
+
     # installed_packages_in_pipfile with current version
     installed_packages_in_pipfile = {
         package["name"]: {"current": package["version"]}
@@ -82,6 +89,7 @@ def main():
     pool = ThreadPool()
     latest_versions = pool.map(get_latest_version, installed_packages_in_pipfile)
     pool.close()
+    pool.join()
 
     for package_name, latest_version in zip(installed_packages_in_pipfile.keys(), latest_versions):
         installed_packages_in_pipfile[package_name]["latest"] = latest_version
