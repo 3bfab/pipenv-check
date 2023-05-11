@@ -59,10 +59,11 @@ def main():
         exit(1)
 
     # installed_packages_in_pipfile with current version
+    # pip list --format=json command sometimes gives different naming formats of the libraries.
     installed_packages_in_pipfile = {
-        package["name"]: {"current": package["version"]}
+        package["name"].replace('_', '-'): {"current": package["version"]}
         for package in installed_packages
-        if package["name"] in pipfile_packages
+        if package["name"].replace('_', '-') in pipfile_packages
     }
 
     # uninstalled packages
