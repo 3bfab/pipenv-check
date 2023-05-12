@@ -57,13 +57,15 @@ def main():
     except Exception as e:
         print("Error occurred while fetching installed packages:", e)
         exit(1)
+    # pip list --format=json command sometimes gives different naming formats of the libraries.
+    installed_packages = [{"name": i["name"].replace("_", "-"), "version": i["version"]} for i in installed_packages]
+
 
     # installed_packages_in_pipfile with current version
-    # pip list --format=json command sometimes gives different naming formats of the libraries.
     installed_packages_in_pipfile = {
-        package["name"].replace('_', '-'): {"current": package["version"]}
+        package["name"]: {"current": package["version"]}
         for package in installed_packages
-        if package["name"].replace('_', '-') in pipfile_packages
+        if package["name"] in pipfile_packages
     }
 
     # uninstalled packages
